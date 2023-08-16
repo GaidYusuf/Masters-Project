@@ -1,0 +1,9 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<h1>Welcome to our Islamic Website!</h1>
+<div class="nav-links">
+  <a href="{% url 'surah_list' %}">Quran</a>
+  <a href="{% url 'prayer_times:select_location' %}">Prayer Times</a>
+  <a href="{% url 'islamic_calendar:islamic_calendar' %}">Islamic Calendar</a>
+  <a href="{% url 'similarity_search' %}">NLP Quran</a>
+</div>
+{% endblock %}

@@ -1,0 +1,277 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prayer Times</title>
+    <!-- Include Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #f5f5f5;
+      }
+
+      .content {
+        padding-bottom: 60px; /* Adjust padding to make space for footer */
+      }
+
+      .container {
+        margin-top: 30px;
+        margin-bottom: 20px; /* Add margin at the bottom for spacing */
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      table {
+        background-color: #fff;
+      }
+
+      th {
+        background-color: #343a40;
+        color: #fff;
+        text-align: center;
+      }
+
+      td {
+        text-align: center;
+      }
+
+      #map {
+        margin-top: 0px;
+        height: 500px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      /* New styles for improved layout and design */
+      .prayer-container {
+        margin-bottom: 30px;
+      }
+
+      .prayer-table {
+        margin-bottom: 20px;
+      }
+
+      .map-container {
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 30px;
+      }
+
+      .map-title {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px;
+        background-color: #343a40;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Display the current date and time on top -->
+      <div class="d-flex justify-content-between mb-3">
+        <div>
+          <strong>Date:</strong>
+          <span id="currentDate">{% now "jS F Y" %}</span>
+        </div>
+        <div>
+          <strong>Time:</strong>
+          <span id="currentTime"></span>
+        </div>
+      </div>
+
+      <!-- Prayer Times Table -->
+      <div class="prayer-container">
+        <table class="table table-bordered table-hover prayer-table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Prayer</th>
+              <th scope="col">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fajr</td>
+              <td id="fajr">{{ prayer_times.Fajr }}</td>
+            </tr>
+            <tr>
+              <td>Dhuhr</td>
+              <td id="dhuhr">{{ prayer_times.Dhuhr }}</td>
+            </tr>
+            <tr>
+              <td>Asr</td>
+              <td id="asr">{{ prayer_times.Asr }}</td>
+            </tr>
+            <tr>
+              <td>Maghrib</td>
+              <td id="maghrib">{{ prayer_times.Maghrib }}</td>
+            </tr>
+            <tr>
+              <td>Isha</td>
+              <td id="isha">{{ prayer_times.Isha }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Map Section -->
+      <div class="map-container">
+        <!-- New title for the map section -->
+        <div class="map-title">Find Mosques Near You</div>
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      // New code for Google Maps API integration
+      let map;
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 0, lng: 0 },
+          zoom: 10,
+        });
+
+        // Add nearby mosques markers
+        const nearbyMosques = {{ nearby_mosques|safe }};
+        for (const mosque of nearbyMosques) {
+          addMarker(mosque.lat, mosque.lng, mosque.name);
+        }
+
+        // Automatically zoom to show all nearby mosques
+        if (nearbyMosques.length > 0) {
+          const bounds = new google.maps.LatLngBounds();
+          for (const mosque of nearbyMosques) {
+            bounds.extend(new google.maps.LatLng(mosque.lat, mosque.lng));
+          }
+          map.fitBounds(bounds);
+        }
+
+        // Update the current time every second
+        function updateCurrentTime() {
+          const currentTimeElement = document.getElementById("currentTime");
+          const now = new Date();
+          const hours = String(now.getHours()).padStart(2, "0");
+          const minutes = String(now.getMinutes()).padStart(2, "0");
+          const seconds = String(now.getSeconds()).padStart(2, "0");
+          const currentTimeString = `${hours}:${minutes}:${seconds}`;
+          currentTimeElement.textContent = currentTimeString;
+        }
+
+        setInterval(updateCurrentTime, 1000);
+
+      }
+
+      function addMarker(lat, lng, name) {
+        const marker = new google.maps.Marker({
+          position: { lat, lng },
+          map: map,
+          title: name,
+        });
+
+        // Create an InfoWindow for the marker
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+                  <div>
+                      <h4>${name}</h4>
+                      <p>Latitude: ${lat}</p>
+                      <p>Longitude: ${lng}</p>
+                  </div>
+              `,
+        });
+
+        // Show the InfoWindow when the user clicks on the marker
+        marker.addListener("click", () => {
+          infoWindow.open(map, marker);
+        });
+      }
+
+      // Function to format the date (YYYY-MM-DD)
+      function formatDate(date) {
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = String(date.getFullYear()).slice(-2);
+        return `${day}:${month}:${year}`;
+      }
+
+      // Function to format the time (HH:mm:ss)
+      function formatTime(date) {
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+        return `${hours}:${minutes}:${seconds}`;
+      }
+
+      // Get the current time in hours and minutes
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+
+      // Convert the current time to minutes for easier comparison
+      const currentTimeInMinutes = hours * 60 + minutes;
+
+      // Prayer times in minutes
+      const fajrTimeInMinutes = convertTimeToMinutes("{{ prayer_times.Fajr }}");
+      const dhuhrTimeInMinutes = convertTimeToMinutes("{{ prayer_times.Dhuhr }}");
+      const asrTimeInMinutes = convertTimeToMinutes("{{ prayer_times.Asr }}");
+      const maghribTimeInMinutes = convertTimeToMinutes("{{ prayer_times.Maghrib }}");
+      const ishaTimeInMinutes = convertTimeToMinutes("{{ prayer_times.Isha }}");
+
+      // Helper function to convert time in HH:mm format to minutes
+      function convertTimeToMinutes(time) {
+        const [hours, minutes] = time.split(":").map(Number);
+        return hours * 60 + minutes;
+      }
+
+      // Helper function to highlight the current prayer based on the current time
+      function highlightCurrentPrayer() {
+        const prayerTimes = [
+          { time: fajrTimeInMinutes, id: "fajr" },
+          { time: dhuhrTimeInMinutes, id: "dhuhr" },
+          { time: asrTimeInMinutes, id: "asr" },
+          { time: maghribTimeInMinutes, id: "maghrib" },
+          { time: ishaTimeInMinutes, id: "isha" },
+        ];
+
+        // Find the current prayer time
+        let currentPrayer = null;
+        for (let i = prayerTimes.length - 1; i >= 0; i--) {
+          if (currentTimeInMinutes >= prayerTimes[i].time) {
+            currentPrayer = prayerTimes[i];
+            break;
+          }
+        }
+
+        // Highlight the current prayer in the table
+        if (currentPrayer) {
+          const currentPrayerElement = document.getElementById(currentPrayer.id);
+          if (currentPrayerElement) {
+            currentPrayerElement.classList.add("font-weight-bold", "text-primary");
+          }
+        }
+      }
+
+      // Call the function to highlight the current prayer
+      highlightCurrentPrayer();
+    </script>
+    <!-- Load Google Maps API with your API key -->
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYEdpl74uptE7jJE05xPZKjNHqcQRIu_k&callback=initMap"
+    ></script>
+  </body>
+</html>
+{% endblock %}

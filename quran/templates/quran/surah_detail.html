@@ -1,0 +1,172 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Surah {{ surah_number }}</title>
+    <style>
+      /* Add CSS to set the height of body and html to 100% */
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column; /* Set the main container to use flexbox */
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+      }
+
+      p {
+        text-align: center;
+        color: #7f8c8d;
+        margin-top: -10px;
+      }
+
+      hr {
+        margin: 20px 0;
+        border: 1px solid #95a5a6;
+      }
+
+      .verse {
+        background-color: #f2f2f2;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+
+      .verse p {
+        margin: 5px 0;
+        color: black;
+      }
+
+      /* Add line spacing between Arabic, Translation, and Transliteration */
+      .verse p:not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      .navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .navigation a {
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+
+      .navigation a:hover {
+        background-color: #2980b9;
+      }
+
+      /* Set the main container to take all available space */
+      #main-container {
+        flex: 1;
+      }
+
+      /* CSS for the bookmark button */
+      .bookmark-button {
+        display: inline-block;
+        background-color: #3498db;
+        color: #ffffff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      /* Style for the bookmarked verse */
+      .bookmarked {
+        background-color: #2ecc71;
+        color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navigation">
+      {% if previous_surah %}
+      <a href="{% url 'surah_detail' previous_surah %}">Previous Chapter</a>
+      {% endif %} {% if next_surah %}
+      <a href="{% url 'surah_detail' next_surah %}">Next Chapter</a>
+      {% endif %}
+    </div>
+    <div id="main-container">
+      <h1>Surah - {{ surah_name }} (Chapter {{ surah_number }})</h1>
+      <p>{{ surah_description }}</p>
+      <hr />
+      {% for verse in verses %}
+      <div class="verse">
+        <!-- Add the bookmark button with verse ID as a data attribute -->
+        <p>
+          <strong>Verse ID:</strong> {{ verse.id }}
+          <span class="bookmark-button" data-verse-id="{{ verse.id }}"
+            >Bookmark</span
+          >
+        </p>
+        <p><strong>Arabic:</strong> {{ verse.content }}</p>
+        <p><strong>Translation:</strong> {{ verse.translation_eng }}</p>
+        <p><strong>Transliteration:</strong> {{ verse.transliteration }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Add a script to handle the bookmarking process -->
+    <script>
+      // Function to check if a verse is bookmarked in localStorage
+      function isVerseBookmarked(verseId) {
+        const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+        return bookmarks.includes(verseId);
+      }
+
+      // Function to toggle bookmark status and update localStorage
+      function toggleBookmark(verseId) {
+        const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+        const verseIndex = bookmarks.indexOf(verseId);
+        if (verseIndex === -1) {
+          // If verse is not bookmarked, add it to bookmarks
+          bookmarks.push(verseId);
+        } else {
+          // If verse is already bookmarked, remove it from bookmarks
+          bookmarks.splice(verseIndex, 1);
+        }
+        localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+      }
+
+      // Get all the bookmark buttons
+      const bookmarkButtons = document.querySelectorAll(".bookmark-button");
+
+      // Check and update bookmark status on page load
+      bookmarkButtons.forEach((button) => {
+        const verseId = button.dataset.verseId;
+        if (isVerseBookmarked(verseId)) {
+          button.classList.add("bookmarked");
+        }
+      });
+
+      // Add a click event listener to each bookmark button
+      bookmarkButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const verseId = button.dataset.verseId;
+
+          // Toggle bookmark status
+          toggleBookmark(verseId);
+
+          // Update button appearance
+          button.classList.toggle("bookmarked");
+        });
+      });
+    </script>
+  </body>
+</html>
+{% endblock %}

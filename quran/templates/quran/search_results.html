@@ -1,0 +1,83 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Results</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 20px;
+      }
+
+      p {
+        text-align: center;
+        color: #555;
+        margin-bottom: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ccc;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        text-align: center; /* Center the content in cells */
+        padding: 12px 15px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      tr:hover {
+        background-color: #f0f0f0;
+      }
+
+      p.no-results {
+        text-align: center;
+        color: #555;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Search Results</h1>
+    {% if results %}
+    <p>
+      {{ results.0.total_matches }} matches found for "{{ results.0.keyword }}"
+    </p>
+    <table>
+      <tr>
+        <th>Surah No.</th>
+        <th>Verse No.</th>
+        <th>Verse</th>
+      </tr>
+      {% for result in results %} {% if result.surah_no %}
+      <tr>
+        <td>{{ result.surah_no }}</td>
+        <td>{{ result.verse_no }}</td>
+        <td>{{ result.content }}</td>
+      </tr>
+      {% endif %} {% endfor %}
+    </table>
+    {% else %}
+    <p>No matches found for the given keyword.</p>
+    {% endif %}
+  </body>
+</html>
+{% endblock %}

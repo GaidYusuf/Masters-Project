@@ -1,0 +1,152 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Surah List</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+      }
+      .hero-image {
+        background-image: url("{% static 'images/quran.png' %}");
+        background-size: cover;
+        background-position: center;
+        height: 300px;
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        border-radius: 8px;
+      }
+      .container {
+        margin-top: 20px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+      /* Center the table */
+      .table-container {
+        display: flex;
+        justify-content: center;
+      }
+
+      table {
+        width: 100%;
+        max-width: 1000px;
+        border-collapse: collapse;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+      }
+
+      th,
+      td {
+        text-align: center;
+        padding: 12px 15px;
+        border-bottom: 1px solid #ccc;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      tr:hover {
+        background-color: #f0f0f0;
+      }
+
+      a {
+        color: #3498db;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* Search form styles */
+      form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      input[type="text"] {
+        padding: 10px 15px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px 0 0 4px;
+        color: #555;
+      }
+
+      button[type="submit"] {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+      }
+
+      button[type="submit"]:hover {
+        background-color: #2180b9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero-image">
+      <div class="overlay">
+        <h1>Quran</h1>
+        <p>
+          Explore the Quranic chapters (Surahs) and verses. Click on a Surah to read its contents. Use the search engine to find specific keywords and retrieve relevant verses.
+        </p>
+        </p>
+      </div>
+    </div>
+    <form action="{% url 'search_verses' %}" method="get">
+      <input type="text" name="keyword" placeholder="Enter keyword" />
+      <button type="submit">Search</button>
+    </form>
+    <div class="table-container">
+      <!-- Wrap the table in a container -->
+      <table>
+        <tr>
+          <th style="width: 33.33%">No.</th>
+          <th style="width: 33.33%">Name</th>
+          <th style="width: 33.33%">Verses</th>
+        </tr>
+        {% for surah in surahs %}
+        <tr>
+          <td>{{ surah.id }}</td>
+          <td>
+            <a href="{% url 'surah_detail' surah.id %}">{{ surah.name }}</a>
+          </td>
+          <td>{{ surah.verses }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </body>
+</html>
+{% endblock %}
