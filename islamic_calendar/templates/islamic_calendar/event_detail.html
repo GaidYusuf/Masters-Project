@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container mt-5">
+  <h1
+    class="display-4"
+    style="
+      color: #333333;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 32px;
+    "
+  >
+    {{ event.name }}
+  </h1>
+  <p
+    class="lead"
+    style="color: #555555; margin-bottom: 15px; text-align: center"
+  >
+    <strong>Date (Gregorian):</strong> {{ event.date }}
+  </p>
+  <p
+    class="lead"
+    style="color: #555555; margin-bottom: 15px; text-align: center"
+  >
+    <strong>Hijri Date:</strong> {{ event.hijri_date }}
+  </p>
+  {% if event_detail %}
+  <div class="text-center">
+    <img
+      src="{{ event_detail.picture.url }}"
+      alt="{{ event.name }} Picture"
+      class="img-fluid rounded mb-3"
+      style="
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: block;
+        margin: 0 auto;
+      "
+    />
+  </div>
+  <div class="text-center">
+    <p class="lead" style="color: #555555; text-align: center">
+      {{ event_detail.description|linebreaks }}
+    </p>
+  </div>
+  {% else %}
+  <p class="lead" style="color: #555555">
+    No additional details available for this event.
+  </p>
+  {% endif %}
+</div>
+{% endblock %}
