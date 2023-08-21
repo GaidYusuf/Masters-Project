@@ -1,7 +1,7 @@
 import requests
 import re
 
-translation_key = "english_saheeh"  # Replace with the desired translation key
+translation_key = "english_saheeh"
 base_url = "https://quranenc.com/api/v1/translation/aya"
 
 # Regular expression to match footnote markers

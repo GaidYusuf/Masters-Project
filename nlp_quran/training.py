@@ -18,7 +18,7 @@ with open(input_file_path, 'r', encoding='utf-8') as input_file:
             tagged_data.append(TaggedDocument(
                 words=word_tokenize(current_text), tags=[current_tags]))
 
-# Define Doc2Vec model configuration
+# Doc2Vec parameters
 vector_size = 300  # Size of the resulting vector (embedding)
 window = 5  # Maximum distance between the current and predicted word within a sentence
 min_count = 2  # Ignores all words with total frequency lower than this

@@ -1,4 +1,3 @@
-# nlp_quran/urls.py
 from django.urls import path
 from .views import similarity_search
 

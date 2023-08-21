@@ -37,9 +37,11 @@ def similarity_search(request):
     if request.method == 'POST':
         user_input = request.POST.get('verse_input')
 
-        # Construct absolute path for the trained model
+        # Construct absolute paths for the trained model and the translations file
         model_path = os.path.join(
             "/Users/qaayed/project/nlp_quran/", "doc2vec_model")
+        translations_path = os.path.join(
+            "/Users/qaayed/project/nlp_quran/", "quran_translations.txt")
 
         # Load the trained Doc2Vec model
         model = Doc2Vec.load(model_path)
@@ -51,8 +53,37 @@ def similarity_search(request):
         # Find most similar verses
         similar_verses = model.docvecs.most_similar([input_vector])
 
-        # Return similar verses as JSON response
-        response_data = {'similar_verses': similar_verses}
-        return JsonResponse(response_data)
+        # Retrieve the corresponding Arabic text, translation, and verse
+        with open(translations_path, 'r', encoding='utf-8') as translations_file:
+            translations = {}
+            current_verse = None
+            arabic_text = None
+            translation = None
+            for line in translations_file:
+                if line.startswith("Verse ("):
+                    if current_verse is not None:
+                        translations[current_verse] = {
+                            'arabic_text': arabic_text,
+                            'translation': translation
+                        }
+                    current_verse = line.strip()
+                elif line.startswith("Arabic Text: "):
+                    arabic_text = line[len("Arabic Text: "):].strip()
+                elif line.startswith("Translation: "):
+                    translation = line[len("Translation: "):].strip()
 
-    return render(request, 'search.html')  # Render the search form
+        # Prepare data for rendering in the template
+        similar_verses_data = []
+        for verse, similarity in similar_verses:
+            data = translations.get(verse)
+            if data:
+                similar_verses_data.append({
+                    'verse': verse,
+                    'similarity': similarity,
+                    'arabic_text': data['arabic_text'],
+                    'translation': data['translation']
+                })
+
+        return render(request, 'search.html', {'similar_verses_data': similar_verses_data})
+
+    return render(request, 'search.html')

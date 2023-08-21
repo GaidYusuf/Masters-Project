@@ -1,26 +1,107 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Quranic Verse Similarity Search</title>
+    <title>Semantic Similarity between Verses of the Quran</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .search-container {
+        text-align: center;
+        margin-top: 80px;
+      }
+      .search-form {
+        display: inline-block;
+        width: 80%;
+        max-width: 500px;
+      }
+      .results-container {
+        margin-top: 30px;
+      }
+      .results-title {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+      }
+      .card {
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .card-body {
+        padding: 20px;
+      }
+      .card-text {
+        font-size: 18px;
+        color: #333;
+      }
+      .card-subtitle {
+        font-size: 14px;
+        color: #666;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+      }
+    </style>
   </head>
   <body>
-    <h1>Quranic Verse Similarity Search</h1>
+    <div class="container">
+      <div class="search-container">
+        <!-- Brief Description -->
+        <p class="lead">
+          Discover verses from the Quran that share semantic similarities with
+          your input text. Simply enter a verse, and our advanced natural
+          language processing model will find related verses for you.
+        </p>
 
-    <form method="post" action="{% url 'similarity_search' %}">
-      {% csrf_token %}
-      <label for="verse_input">Enter a Quranic Verse:</label>
-      <textarea name="verse_input" rows="4" cols="50"></textarea>
-      <br />
-      <button type="submit">Search</button>
-    </form>
+        <!-- Search Form -->
+        <form method="post" class="search-form">
+          {% csrf_token %}
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              name="verse_input"
+              placeholder="Enter your verse..."
+            />
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
 
-    {% if similar_verses %}
-    <h2>Similar Verses:</h2>
-    <ul>
-      {% for verse, similarity in similar_verses %}
-      <li>{{ verse }} (Similarity: {{ similarity }})</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
+      <!-- Display Similar Verses Here -->
+      <div class="results-container">
+        {% if similar_verses_data %}
+        <h2 class="results-title">Similar Verses Found</h2>
+        {% for verse_data in similar_verses_data %}
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">{{ verse_data.verse }}</h5>
+            <p class="card-text">{{ verse_data.arabic_text }}</p>
+            <p class="card-text">{{ verse_data.translation }}</p>
+            <p class="card-subtitle mb-2 text-muted">
+              Similarity Score: {{ verse_data.similarity }}
+            </p>
+          </div>
+        </div>
+        {% endfor %} {% endif %}
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </body>
 </html>
+{% endblock %}
