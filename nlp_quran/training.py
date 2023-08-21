@@ -1,34 +1,37 @@
-import gensim
-from gensim.models.doc2vec import TaggedDocument
+from gensim.models.doc2vec import Doc2Vec, TaggedDocument
+from nltk.tokenize import word_tokenize
 
-# Function to read data from the file and create TaggedDocument objects
+# Read the preprocessed verses data
+input_file_path = 'preprocessed_quran_translations.txt'
 
+# Prepare tagged documents for training
+tagged_data = []
+current_tags = None
+current_text = ""
+with open(input_file_path, 'r', encoding='utf-8') as input_file:
+    for line in input_file:
+        if line.startswith("Verse ("):
+            current_tags = line.strip()
+            current_text = ""
+        elif line.startswith("Preprocessed Translation: "):
+            current_text = line[len("Preprocessed Translation: "):]
+            tagged_data.append(TaggedDocument(
+                words=word_tokenize(current_text), tags=[current_tags]))
 
-def read_data(filename):
-    with open(filename, 'r', encoding='utf-8') as file:
-        lines = file.read().split('\n\n')  # Split based on the newline character
+# Define Doc2Vec model configuration
+vector_size = 300  # Size of the resulting vector (embedding)
+window = 5  # Maximum distance between the current and predicted word within a sentence
+min_count = 2  # Ignores all words with total frequency lower than this
+workers = 4  # Number of CPU cores to use when training the model
 
-    tagged_data = []
-    for line in lines:
-        verse_data = line.strip().split('\n')
-        verse_id = int(verse_data[0].split(':')[-1])
-        verse_text = verse_data[1].split(': ')[1]  # Extract the verse text
-        tagged_data.append(TaggedDocument(verse_text.split(), [str(verse_id)]))
-
-    return tagged_data
-
-
-# Load the preprocessed data
-tagged_data = read_data('quran_data.txt')
-
-# Train the Doc2Vec model
-model = gensim.models.Doc2Vec(
-    vector_size=50, window=2, min_count=2, workers=4, epochs=10)
+# Initialize and train the Doc2Vec model
+model = Doc2Vec(vector_size=vector_size, window=window,
+                min_count=min_count, workers=workers)
 model.build_vocab(tagged_data)
 model.train(tagged_data, total_examples=model.corpus_count,
-            epochs=model.epochs)
+            epochs=30)  # Adjust epochs as needed
 
 # Save the trained model
-model.save('doc2vec_model')
+model.save("doc2vec_model")
 
-print("Doc2Vec model trained and saved successfully.")
+print("Doc2Vec model trained and saved.")

@@ -1,0 +1,83 @@
+/* static/css/style.css */
+body {
+    font-family: 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .header h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 36px;
+    line-height: 1.2;
+  }
+  
+  .mission,
+  .offer,
+  .contact {
+    margin-bottom: 40px;
+  }
+  
+  .offer-item {
+    position: relative;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 20px; /* Add margin at the bottom of each offer item */
+  }
+  
+  .offer-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .signature {
+    font-style: italic;
+    color: #777;
+  }
+  
+  /* Font Awesome icons */
+  .fa-quran::before {
+    content: "\f687";
+  }
+  
+  .nav-links {
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .nav-links a {
+    display: inline-block;
+    margin: 0 15px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 18px;
+    transition: color 0.3s;
+  }
+  
+
+  
+  /* Media queries for responsive design */
+  @media screen and (max-width: 768px) {
+    .nav-links {
+      margin-top: 30px;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+    }
+    
+    .offer-item {
+      padding: 20px;
+    }
+  }

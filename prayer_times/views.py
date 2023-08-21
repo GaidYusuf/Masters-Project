@@ -111,7 +111,7 @@ def fetch_nearby_mosques(city, country):
     url = f'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
     params = {
         'location': f'{lat},{lng}',
-        # 5km radius for nearby places search (adjust as needed)
+        # 20km radius for nearby places search (adjust as needed)
         'radius': 20000,
         'type': 'mosque',
         'key': GOOGLE_PLACES_API_KEY,

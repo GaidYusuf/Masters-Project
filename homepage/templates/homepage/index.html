@@ -1,9 +1,90 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-<h1>Welcome to our Islamic Website!</h1>
-<div class="nav-links">
-  <a href="{% url 'surah_list' %}">Quran</a>
-  <a href="{% url 'prayer_times:select_location' %}">Prayer Times</a>
-  <a href="{% url 'islamic_calendar:islamic_calendar' %}">Islamic Calendar</a>
-  <a href="{% url 'similarity_search' %}">NLP Quran</a>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+<div class="container">
+  <div class="header">
+    <h1>Welcome to MuslimLife</h1>
+    <p>
+      At MuslimLife, we are dedicated to providing a digital sanctuary for
+      seekers of Islamic knowledge and spiritual enlightenment. Our platform is
+      a labor of love, meticulously crafted to offer a comprehensive and
+      immersive experience for individuals who wish to deepen their
+      understanding of Islam. With a strong foundation in faith, technology, and
+      community, we strive to be a beacon of guidance in the digital age.
+    </p>
+  </div>
+  <div class="mission">
+    <h2>Our Mission</h2>
+    <p>
+      Our mission is to empower individuals on their spiritual journey by
+      seamlessly blending technology with the profound teachings of Islam. We
+      aim to foster a deeper connection with the Quran, the Islamic calendar,
+      and the practice of daily prayers. Through innovation and dedication, we
+      aspire to create an online space where seekers can access the richness of
+      Islamic wisdom, find practical guidance for modern living, and enhance
+      their relationship with Allah.
+    </p>
+  </div>
+  <div class="offer">
+    <h2>What We Offer</h2>
+    <div class="offer-item">
+      <strong>Quranic Wisdom</strong>
+      <p>
+        Dive into the timeless wisdom of the Quran. Our platform offers the
+        complete Quran with all its chapters and verses. You can explore the
+        divine message, reflect on its meanings, and find guidance for every
+        aspect of life. The bookmark feature enables you to mark verses that
+        resonate with you, making it easier to return to them for inspiration.
+      </p>
+    </div>
+    <div class="offer-item">
+      <strong>Islamic Calendar</strong>
+      <p>
+        Stay connected with the Islamic lunar calendar. Discover significant
+        events and milestones in the Islamic year. By clicking on each event,
+        you can learn more about its significance and historical context,
+        fostering a greater appreciation for the Islamic heritage.
+      </p>
+    </div>
+    <div class="offer-item">
+      <strong>Prayer Times</strong>
+      <p>
+        Enhance your connection with Allah through timely prayers. Our website
+        fetches daily prayer times based on your location, ensuring that you
+        never miss a prayer. Strengthen your relationship with the Creator by
+        engaging in this essential act of worship.
+      </p>
+    </div>
+    <div class="offer-item">
+      <strong>Semantic Similarity with Doc2Vec</strong>
+      <p>
+        Experience the depth of the Quran's teachings through our innovative
+        feature. Input a verse, and our advanced Doc2Vec technology will
+        generate similar verses based on semantic similarity. This tool allows
+        you to explore the interconnectedness of Quranic verses and discover the
+        intricate layers of meaning within the text.
+      </p>
+    </div>
+  </div>
+  <div class="contact">
+    <h2>Contact Us</h2>
+    <p>
+      If you have any questions, suggestions, or feedback, please feel free to
+      reach out to us at
+      <a href="mailto:qaayed@hotmail.com">qaayed@hotmail.com</a>. We value your
+      input and are dedicated to continuously improving the user experience on
+      our platform.
+    </p>
+    <p>
+      Thank you for choosing MuslimLife as your source of enlightenment and
+      inspiration. May your journey be blessed with knowledge, understanding,
+      and inner peace.
+    </p>
+    <p class="signature">
+      Sincerely,<br />
+      The MuslimLife Team
+    </p>
+  </div>
 </div>
+
 {% endblock %}

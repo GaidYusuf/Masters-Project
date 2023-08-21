@@ -1,24 +1,43 @@
 import requests
+import re
 
-# API request
-url = "http://api.alquran.cloud/v1/quran/en.asad"
-response = requests.get(url)
+translation_key = "english_saheeh"  # Replace with the desired translation key
+base_url = "https://quranenc.com/api/v1/translation/aya"
 
-# Check if the request was successful
-if response.status_code == 200:
-    data = response.json()
+# Regular expression to match footnote markers
+footnote_pattern = r'\[\d+\]'
 
-    # Save the data to a text file after preprocessing
-    with open('quran_data1.txt', 'w', encoding='utf-8') as file:
-        for surah in data['data']['surahs']:
-            for verse in surah['ayahs']:
-                verse_id = verse['number']
-                verse_text = verse['text']
-                file.write(f"Verse ID: {verse_id}\n")
-                file.write(f"Original Text: {verse_text}\n")
-                file.write("=" * 50 + "\n")
+# Save the data to a text file after preprocessing
+with open('quran_translations.txt', 'w', encoding='utf-8') as file:
+    for surah in range(1, 115):  # Quran has 114 surahs
+        ayah = 1
+        while True:
+            url = f"{base_url}/{translation_key}/{surah}/{ayah}"
+            response = requests.get(url)
 
-    print("Data saved to 'quran_data1.txt'.")
+            if response.status_code == 200:
+                data = response.json()
+                if "result" in data:
+                    aya_data = data["result"]
+                    aya_number = aya_data['aya']
+                    arabic_text = aya_data['arabic_text']
+                    translation = aya_data['translation']
 
-else:
-    print("Failed to fetch data from the API.")
+                    # Remove footnote markers using regular expression
+                    cleaned_translation = re.sub(
+                        footnote_pattern, '', translation)
+
+                    # Remove aya_number from the cleaned translation
+                    cleaned_translation = cleaned_translation.replace(
+                        f"({aya_number})", '')
+
+                    file.write(f"Verse ({surah}:{aya_number})\n")
+                    file.write(f"Arabic Text: {arabic_text}\n")
+                    file.write(f"Translation: {cleaned_translation.strip()}\n")
+                    file.write("=" * 50 + "\n")
+
+                ayah += 1
+            else:
+                break
+
+print("Translations saved to 'quran_translations.txt'.")

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Quranic Verse Similarity Search</title>
+  </head>
+  <body>
+    <h1>Quranic Verse Similarity Search</h1>
+
+    <form method="post" action="{% url 'similarity_search' %}">
+      {% csrf_token %}
+      <label for="verse_input">Enter a Quranic Verse:</label>
+      <textarea name="verse_input" rows="4" cols="50"></textarea>
+      <br />
+      <button type="submit">Search</button>
+    </form>
+
+    {% if similar_verses %}
+    <h2>Similar Verses:</h2>
+    <ul>
+      {% for verse, similarity in similar_verses %}
+      <li>{{ verse }} (Similarity: {{ similarity }})</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </body>
+</html>
