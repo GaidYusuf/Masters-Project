@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-hzhj+5lcebplq=v*r2#$5i)g^f627kvgec43)_a))gtxr^1i@j
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'muslim-life-6cf2fa46a3d9.herokuapp.com'
+    'muslim-life-6cf2fa46a3d9.herokuapp.com',
+    '127.0.0.1'
 ]
 
 
@@ -129,6 +130,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Default primary key field type
