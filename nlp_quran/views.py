@@ -7,6 +7,7 @@ import re
 import nltk
 from nltk.corpus import stopwords
 import ssl
+import urllib.request
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # Download NLTK resources if not already present
@@ -37,14 +38,12 @@ def similarity_search(request):
     if request.method == 'POST':
         user_input = request.POST.get('verse_input')
 
-        # Construct absolute paths for the trained model and the translations file
-        model_path = os.path.join(
-            "/Users/qaayed/project/nlp_quran/", "doc2vec_model")
-        translations_path = os.path.join(
-            "/Users/qaayed/project/nlp_quran/", "quran_translations.txt")
+        # Use S3 object URLs for the trained model and translations file
+        model_url = "https://nlp-quran-doc2vec-model.s3.eu-west-2.amazonaws.com/doc2vec_model"
+        translations_url = "https://nlp-quran-doc2vec-model.s3.eu-west-2.amazonaws.com/quran_translations.txt"
 
         # Load the trained Doc2Vec model
-        model = Doc2Vec.load(model_path)
+        model = Doc2Vec.load(model_url)
 
         # Preprocess user input and infer its vector
         preprocessed_input = preprocess_text(user_input)
@@ -54,23 +53,26 @@ def similarity_search(request):
         similar_verses = model.docvecs.most_similar([input_vector])
 
         # Retrieve the corresponding Arabic text, translation, and verse
-        with open(translations_path, 'r', encoding='utf-8') as translations_file:
-            translations = {}
-            current_verse = None
-            arabic_text = None
-            translation = None
-            for line in translations_file:
-                if line.startswith("Verse ("):
-                    if current_verse is not None:
-                        translations[current_verse] = {
-                            'arabic_text': arabic_text,
-                            'translation': translation
-                        }
-                    current_verse = line.strip()
-                elif line.startswith("Arabic Text: "):
-                    arabic_text = line[len("Arabic Text: "):].strip()
-                elif line.startswith("Translation: "):
-                    translation = line[len("Translation: "):].strip()
+        # Fetch translations from the translations_url
+        translations = {}
+        current_verse = None
+        arabic_text = None
+        translation = None
+        response = urllib.request.urlopen(translations_url)
+        for line in response:
+            line = line.decode('utf-8')
+            if line.startswith("Verse ("):
+                if current_verse is not None:
+                    translations[current_verse] = {
+                        'arabic_text': arabic_text,
+                        'translation': translation
+                    }
+                current_verse = line.strip()
+            elif line.startswith("Arabic Text: "):
+                arabic_text = line[len("Arabic Text: "):].strip()
+            elif line.startswith("Translation: "):
+                translation = line[len("Translation: "):].strip()
+        response.close()
 
         # Prepare data for rendering in the template
         similar_verses_data = []
