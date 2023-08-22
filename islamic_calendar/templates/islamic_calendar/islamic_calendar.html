@@ -26,6 +26,7 @@
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
 
+        @media screen and (max-width: 767px) {
         .hero-image {
             background-image: url("{% static 'images/IslamicCalendar.jpg' %}");
             background-size: cover;
@@ -33,6 +34,7 @@
             height: 200px;
             position: relative;
         }
+      }
 
         .overlay {
             position: absolute;
@@ -42,8 +44,12 @@
             text-align: center;
             color: #fff;
             background-color: rgba(0, 0, 0, 0.6);
-            padding: 20px;
+            padding: 10px;
             border-radius: 8px;
+        }
+
+        .container {
+            margin-top: 10px;
         }
 
         h1 {
