@@ -1,120 +1,136 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Islamic Calendar</title>
     <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f7f7f7;
-        margin: 0;
-        padding: 0;
-      }
-      .header {
-        background-color: #fff;
-        padding: 10px 0;
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      .hero-image {
-        background-image: url("{% static 'images/IslamicCalendar.jpg' %}");
-        background-size: cover;
-        background-position: center;
-        height: 300px;
-        position: relative;
-      }
-      .overlay {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        color: #fff;
-        background-color: rgba(0, 0, 0, 0.6);
-        padding: 20px;
-        border-radius: 8px;
-      }
-      .container {
-        margin-top: 20px;
-      }
-      h1 {
-        font-size: 28px;
-        font-weight: bold;
-        margin-bottom: 20px;
-      }
-      p {
-        font-size: 16px;
-        line-height: 1.6;
-        margin-bottom: 20px;
-      }
-      .table {
-        font-size: 16px;
-      }
-      .table th,
-      .table td {
-        padding: 12px;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 10px 0;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-image {
+            background-image: url("{% static 'images/IslamicCalendar.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            height: 200px;
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        h1 {
+            font-size: 24px; 
+            font-weight: bold;
+            margin-bottom: 15px; 
+        }
+
+        p {
+            font-size: 14px; 
+            margin-bottom: 15px; 
+        }
+
+        .table {
+            font-size: 14px; 
+        }
+
+        .table th,
+        .table td {
+            padding: 10px; 
+        }
+
+        .btn-group a {
+            font-size: 14px; 
+            padding: 8px 15px; 
+        }
     </style>
-  </head>
-  <body>
-    </div>
-    <div class="hero-image">
-      <div class="overlay">
+</head>
+<body>
+</div>
+<div class="hero-image">
+    <div class="overlay">
         <h1>Islamic Calendar</h1>
         <p>
-          Muslims around the world use the Islamic Calendar (also known as the
-          Lunar or Hijri calendar) to determine the dates of religious events
-          and observances. This Hijri calendar is based on 12 lunar months – a
-          new month begins when a new moon is sighted.
+            Muslims around the world use the Islamic Calendar (also known as the
+            Lunar or Hijri calendar) to determine the dates of religious events
+            and observances. This Hijri calendar is based on 12 lunar months – a
+            new month begins when a new moon is sighted.
         </p>
-      </div>
     </div>
-    <div class="container">
-      <!-- Year Navigation Buttons -->
-      <div class="btn-group" role="group" aria-label="Year Navigation">
+</div>
+<div class="container">
+    <!-- Year Navigation Buttons -->
+    <div class="btn-group" role="group" aria-label="Year Navigation">
         {% for year in distinct_years|dictsort:'date__year' %}
         <a
-          href="{% url 'islamic_calendar:islamic_calendar_year' year=year.date__year %}"
-          class="btn btn-primary{% if year.date__year == selected_year %} active{% endif %}"
+            href="{% url 'islamic_calendar:islamic_calendar_year' year=year.date__year %}"
+            class="btn btn-primary{% if year.date__year == selected_year %} active{% endif %}"
         >
-          {{ year.date__year }}
+            {{ year.date__year }}
         </a>
         {% endfor %}
-      </div>
+    </div>
 
-      <table class="table table-bordered table-hover mt-3">
+    <table class="table table-bordered table-hover mt-3">
         <thead class="thead-dark">
-          <tr>
+        <tr>
             <th scope="col">Islamic Event</th>
             <th scope="col">Date (Gregorian)</th>
             <th scope="col">Hijri Date</th>
-          </tr>
+        </tr>
         </thead>
         <tbody>
-          {% for event in upcoming_events %}
-          <tr>
+        {% for event in upcoming_events %}
+        <tr>
             <td>
-              <a
-                href="{% url 'islamic_calendar:event_detail' event_id=event.id %}"
+                <a
+                    href="{% url 'islamic_calendar:event_detail' event_id=event.id %}"
                 >{{ event.name }}</a
-              >
+                >
             </td>
             <td>{{ event.date }}</td>
             <td>{{ event.hijri_date }}</td>
-          </tr>
-          {% endfor %}
+        </tr>
+        {% endfor %}
         </tbody>
-      </table>
-    </div>
+    </table>
+</div>
 
-    <!-- Include Bootstrap JS and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+<!-- Include Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
 {% endblock %}

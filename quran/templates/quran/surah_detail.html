@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Surah {{ surah_number }}</title>
     <style>
-      /* Add CSS to set the height of body and html to 100% */
       html,
       body {
         height: 100%;
@@ -15,24 +14,27 @@
       body {
         font-family: Arial, sans-serif;
         margin: 0;
-        padding: 20px;
+        padding: 10px;
         display: flex;
-        flex-direction: column; /* Set the main container to use flexbox */
+        flex-direction: column;
       }
 
       h1 {
         text-align: center;
+        font-size: 24px;
         color: #2c3e50;
       }
 
       p {
         text-align: center;
+        font-size: 14px;
         color: #7f8c8d;
-        margin-top: -10px;
+        margin-top: -5px;
+        margin-bottom: 15px;
       }
 
       hr {
-        margin: 20px 0;
+        margin: 15px 0;
         border: 1px solid #95a5a6;
       }
 
@@ -45,6 +47,7 @@
 
       .verse p {
         margin: 5px 0;
+        font-size: 14px;
         color: black;
       }
 
@@ -56,15 +59,16 @@
       .navigation {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
       }
 
       .navigation a {
-        padding: 10px 20px;
+        padding: 8px 15px;
         background-color: #3498db;
         color: #ffffff;
         text-decoration: none;
         border-radius: 5px;
+        font-size: 14px;
       }
 
       .navigation a:hover {
@@ -81,9 +85,10 @@
         display: inline-block;
         background-color: #3498db;
         color: #ffffff;
-        padding: 5px 10px;
+        padding: 3px 8px;
         border-radius: 5px;
         cursor: pointer;
+        font-size: 12px;
       }
 
       /* Style for the bookmarked verse */
@@ -102,7 +107,7 @@
       {% endif %}
     </div>
     <div id="main-container">
-      <h1>Surah - {{ surah_name }} (Chapter {{ surah_number }})</h1>
+      <h1>Surah {{ surah_name }} (Chapter {{ surah_number }})</h1>
       <p>{{ surah_description }}</p>
       <hr />
       {% for verse in verses %}

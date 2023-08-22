@@ -1,22 +1,9 @@
 from django.shortcuts import render
 import requests
-import threading
 
 
-def fetch_surah_data(url, surah_number, headers, surahs, lock):
-    response = requests.get(f"{url}/{surah_number}", headers=headers)
-
-    if response.status_code == 200:
-        data = response.json()
-        surah = {
-            'id': data.get('id', surah_number),
-            'name': data.get('surah_name', f'Surah {surah_number}'),
-            'verses': data.get('total_verses', 0)
-        }
-
-        # Append the surah data to the list
-        with lock:
-            surahs.append(surah)
+from django.shortcuts import render
+import requests
 
 
 def surah_detail(request, surah_number):
@@ -65,30 +52,21 @@ def surah_detail(request, surah_number):
 
 
 def surah_list(request):
-    url = "https://al-quran1.p.rapidapi.com"
+    url = "https://api.quran.com/api/v4/chapters"
     headers = {
-        "X-RapidAPI-Key": "c33f0ab387msh0de81eb89986f1cp1adfa8jsn03505a9cc89f",
-        "X-RapidAPI-Host": "al-quran1.p.rapidapi.com"
+        "Content-Type": "application/json"
     }
 
-    surahs = []
-    lock = threading.Lock()
+    response = requests.get(url, headers=headers)
 
-    threads = []
-    for i in range(1, 115):  # There are 114 surahs (chapters) in the Quran
-        thread = threading.Thread(
-            target=fetch_surah_data, args=(url, i, headers, surahs, lock))
-        thread.start()
-        threads.append(thread)
+    if response.status_code == 200:
+        data = response.json()
+        surahs = data.get("chapters", [])
 
-    # Wait for all threads to complete
-    for thread in threads:
-        thread.join()
-
-    # Sort the surahs list based on 'id' (Surah number) in ascending order
-    surahs.sort(key=lambda x: x['id'])
-
-    return render(request, 'quran/surah_list.html', {'surahs': surahs})
+        return render(request, 'quran/surah_list.html', {'surahs': surahs})
+    else:
+        # Handle the case when the API request fails
+        return render(request, 'quran/surah_list.html', {'surahs': []})
 
 
 def search_verses(request):

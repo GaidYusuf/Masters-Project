@@ -1,5 +1,4 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -14,12 +13,13 @@
         background-color: #f7f7f7;
         margin: 0;
         padding: 0;
+        font-size: 16px;
       }
       .hero-image {
         background-image: url("{% static 'images/SelectLocation.png' %}");
         background-size: cover;
         background-position: center;
-        height: 300px;
+        height: 200px;
         position: relative;
       }
       .overlay {
@@ -35,30 +35,34 @@
       }
 
       h1 {
-        font-size: 28px;
+        font-size: 24px;
         font-weight: bold;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
       }
 
       .form-container {
         background-color: #ffffff;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        margin-top: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
       }
       .form-container h1 {
         color: #333333;
         font-weight: bold;
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
+        font-size: 22px;
       }
       .form-group label {
         font-weight: bold;
+        font-size: 16px;
       }
       .btn-primary {
         background-color: #007bff;
         border-color: #007bff;
+        font-size: 16px;
+        padding: 10px 20px;
       }
       .btn-primary:hover {
         background-color: #0056b3;
@@ -76,7 +80,8 @@
         </p>
       </div>
     </div>
-    <div class="container mt-5">
+    <div class="container mt-4">
+      <!-- Adjusted margin-top -->
       <div class="row justify-content-center">
         <div class="col-md-6">
           <div class="form-container">
