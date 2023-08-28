@@ -9,7 +9,9 @@ variables:
 
 before_script:
   - apt-get update -y && apt-get install -y python3-pip
-  - pip3 install -r requirements.txt
+  - pip3 install -U pip
+  - source ~/.local/share/virtualenvs/project-RGpKCLMb/bin/activate
+  - pip install -r requirements.txt
 
 build-job:
   stage: build
@@ -27,13 +29,14 @@ lint-test-job:
   stage: test
   script:
     - echo "Linting code..."
-    - pylint prayer_times islamic_calendar quran nlp_quran homepage 
+    - pylint prayer_times islamic_calendar quran nlp_quran homepage # Adjust to your app names
 
 deploy-job:
   stage: deploy
   environment: production
   script:
     - echo "Deploying application to Heroku..."
-    - apt-get install -y heroku
+    - curl https://cli-assets.heroku.com/install.sh | sh
+    - heroku --version
     - heroku login -i
     - git push heroku master
