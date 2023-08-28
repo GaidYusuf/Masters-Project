@@ -53,7 +53,6 @@ def prayer_times(request):
 
 def fetch_countries(request):
     if request.method == 'GET':
-        # Replace this with the actual API URL for fetching countries and cities
         api_url = 'https://countriesnow.space/api/v0.1/countries'
         response = requests.get(api_url)
         data = response.json()
