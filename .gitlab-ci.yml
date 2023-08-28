@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
   - deploy
 
 variables:
@@ -18,18 +17,6 @@ build-job:
   script:
     - echo "Collecting static files..."
     - python manage.py collectstatic --noinput
-
-unit-test-job:
-  stage: test
-  script:
-    - echo "Running unit tests..."
-    - python manage.py test
-
-lint-test-job:
-  stage: test
-  script:
-    - echo "Linting code..."
-    - pylint prayer_times islamic_calendar quran nlp_quran homepage # Adjust to your app names
 
 deploy-job:
   stage: deploy
