@@ -1,21 +1,18 @@
-# Use the official Python image as the base image
-FROM python:3.8
+# Use an official Python runtime as the base image
+FROM python:3.8-slim
 
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the Pipfile and Pipfile.lock to the working directory
+# Copy the Pipfile and Pipfile.lock to the container
 COPY Pipfile Pipfile.lock /app/
 
-# Install dependencies using pipenv
+# Install pipenv and dependencies
 RUN pip install pipenv
 RUN pipenv install --deploy --ignore-pipfile
 
 # Copy the rest of the application code to the container
 COPY . /app/
 
-# Expose the port that your application runs on
-EXPOSE 8000
-
-# Run the Django application
-CMD ["pipenv", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Specify the command to run when the container starts
+CMD ["pipenv", "run", "gunicorn", "--bind", "0.0.0.0:8000", "MuslimLife.wsgi:application"]

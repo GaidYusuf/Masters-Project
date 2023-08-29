@@ -1,1 +1,1 @@
-web: gunicorn MuslimLife.wsgi
+web: pipenv run gunicorn MuslimLife.wsgi:application
