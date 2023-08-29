@@ -32,12 +32,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to Heroku
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Heroku CLI
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          echo "HEROKU_API_KEY: $HEROKU_API_KEY"  # Echo the value for verification
           curl https://cli-assets.heroku.com/install.sh | sh
           heroku --version
-          heroku login -i
-          git push heroku master
+          docker login --username=_ --password="${HEROKU_API_KEY}" registry.heroku.com
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t registry.heroku.com/muslim-life/web .
+          docker push registry.heroku.com/muslim-life/web
+
+      - name: Release Docker image
+        run: heroku container:release -a muslim-life
