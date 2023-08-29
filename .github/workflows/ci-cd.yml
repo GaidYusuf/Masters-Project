@@ -33,7 +33,7 @@ jobs:
     steps:
     - name: Deploy to Heroku
       env:
-        HEROKU_API_KEY: ${{ secrets.1c911dea-01a0-4419-83a3-c2842b55a6cb }}  
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}  
       run: |
         curl https://cli-assets.heroku.com/install.sh | sh
         heroku --version
