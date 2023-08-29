@@ -38,4 +38,4 @@ jobs:
         curl https://cli-assets.heroku.com/install.sh | sh
         heroku --version
         heroku login -i
-        git push heroku main  
+        git push heroku master  
