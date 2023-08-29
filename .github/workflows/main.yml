@@ -49,4 +49,4 @@ jobs:
           docker push registry.heroku.com/muslim-life/web
 
       - name: Release Docker image
-        run: heroku container:release -a muslim-life
+        run: heroku container:release web -a muslim-life  
