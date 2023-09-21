@@ -31,4 +31,5 @@ def islamic_calendar_year(request, year):
 def event_detail(request, event_id):
     event = get_object_or_404(IslamicEvent, id=event_id)
     event_detail = EventDetail.objects.filter(event__name=event.name).first()
-    return render(request, 'islamic_calendar/event_detail.html', {'event': event, 'event_detail': event_detail})
+    return render(request, 'islamic_calendar/event_detail.html',
+                  {'event': event, 'event_detail': event_detail})
