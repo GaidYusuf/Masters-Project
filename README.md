@@ -14,7 +14,7 @@ MuslimLife is built using the following technologies:
 
 MuslimLife offers a range of features to enhance the user experience:
 
-1. **Quran**:Read and explore the Quran's verses and content.
+1. **Quran**: Read and explore the Quran's verses and content.
 2. **Quranic Insights**: Explore the Quran with semantic analysis of verses.
 3. **Prayer Times**: Access accurate prayer times based on your location.
 4. **Islamic Calendar**: Stay updated on Islamic events and important dates.
