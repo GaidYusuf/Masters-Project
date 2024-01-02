@@ -2,9 +2,6 @@ from django.shortcuts import render
 import requests
 
 
-from django.shortcuts import render
-import requests
-
 
 def surah_detail(request, surah_number):
     # Fetch all verses of the Surah
